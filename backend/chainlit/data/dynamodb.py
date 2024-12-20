@@ -12,6 +12,7 @@ import aiohttp
 import boto3  # type: ignore
 from boto3.dynamodb.types import TypeDeserializer, TypeSerializer
 
+from backend.chainlit.data.storage_clients.s3 import S3StorageClient
 from chainlit.context import context
 from chainlit.data.base import BaseDataLayer
 from chainlit.data.storage_clients.base import BaseStorageClient
@@ -102,7 +103,6 @@ class DynamoDBDataLayer(BaseDataLayer):
 
     async def get_user(self, identifier: str) -> Optional["PersistedUser"]:
         _logger.info("DynamoDB: get_user identifier=%s", identifier)
-        print("======get_user")
         response = self.client.get_item(
             TableName=self.table_name,
             Key={
@@ -284,7 +284,6 @@ class DynamoDBDataLayer(BaseDataLayer):
         _logger.info(
             "DynamoDB: get_element thread=%s element=%s", thread_id, element_id
         )
-        print("======get_element")
         response = self.client.get_item(
             TableName=self.table_name,
             Key={
@@ -292,7 +291,6 @@ class DynamoDBDataLayer(BaseDataLayer):
                 "SK": {"S": f"ELEMENT#{element_id}"},
             },
         )
-        print(response)
         if "Item" not in response:
             return None
 
@@ -369,7 +367,7 @@ class DynamoDBDataLayer(BaseDataLayer):
 
     async def get_thread_author(self, thread_id: str) -> str:
         _logger.info("DynamoDB: get_thread_author thread=%s", thread_id)
-        print("=====get_thread_author")
+
         response = self.client.get_item(
             TableName=self.table_name,
             Key={
@@ -523,10 +521,8 @@ class DynamoDBDataLayer(BaseDataLayer):
                 thread_dict = item
 
             elif item["SK"].startswith("ELEMENT"):
-                if item.get("url"):
-                    print(f"before: {item["url"]}")
+                if item.get("url") and isinstance(self.storage_provider, S3StorageClient):
                     item["url"]=self.storage_provider.sign_url(item["objectKey"])
-                    print(f"after: {item["url"]}")
                 elements.append(item)
 
             elif item["SK"].startswith("STEP"):
@@ -548,7 +544,6 @@ class DynamoDBDataLayer(BaseDataLayer):
                 "elements": elements,
             }
         )
-        print(f"thread_dict: \n {thread_dict}")
         return thread_dict
 
 
