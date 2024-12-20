@@ -102,7 +102,7 @@ class DynamoDBDataLayer(BaseDataLayer):
 
     async def get_user(self, identifier: str) -> Optional["PersistedUser"]:
         _logger.info("DynamoDB: get_user identifier=%s", identifier)
-
+        print("======get_user")
         response = self.client.get_item(
             TableName=self.table_name,
             Key={
@@ -284,7 +284,7 @@ class DynamoDBDataLayer(BaseDataLayer):
         _logger.info(
             "DynamoDB: get_element thread=%s element=%s", thread_id, element_id
         )
-
+        print("======get_element")
         response = self.client.get_item(
             TableName=self.table_name,
             Key={
@@ -369,7 +369,7 @@ class DynamoDBDataLayer(BaseDataLayer):
 
     async def get_thread_author(self, thread_id: str) -> str:
         _logger.info("DynamoDB: get_thread_author thread=%s", thread_id)
-
+        print("=====get_thread_author")
         response = self.client.get_item(
             TableName=self.table_name,
             Key={
@@ -488,7 +488,7 @@ class DynamoDBDataLayer(BaseDataLayer):
 
     async def get_thread(self, thread_id: str) -> "Optional[ThreadDict]":
         _logger.info("DynamoDB: get_thread thread=%s", thread_id)
-
+        print("get_thread")
         # Get all thread records
         thread_items: List[Any] = []
 
