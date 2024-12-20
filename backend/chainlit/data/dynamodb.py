@@ -47,8 +47,6 @@ class DynamoDBDataLayer(BaseDataLayer):
         storage_provider: Optional[BaseStorageClient] = None,
         user_thread_limit: int = 10,
     ):
-        print("==========print========")
-        _logger.info("========log=================")
         if client:
             self.client = client
         else:
@@ -294,7 +292,7 @@ class DynamoDBDataLayer(BaseDataLayer):
                 "SK": {"S": f"ELEMENT#{element_id}"},
             },
         )
-
+        print(response)
         if "Item" not in response:
             return None
 
