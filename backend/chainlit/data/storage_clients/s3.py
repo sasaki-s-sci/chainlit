@@ -35,3 +35,14 @@ class S3StorageClient(BaseStorageClient):
         except Exception as e:
             logger.warn(f"S3StorageClient, upload_file error: {e}")
             return {}
+
+    def sign_url(self, object_key:str)->str:
+        url=self.client.generate_presigned_url(
+            ClientMethod="get_object",
+            Params={
+                    "Bucket": self.bucket,
+                    "Key": object_key,
+                    },
+            ExpiresIn=3600,  # URLの有効期限[s]
+        )
+        return url
