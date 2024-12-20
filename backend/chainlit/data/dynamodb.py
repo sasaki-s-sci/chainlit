@@ -47,6 +47,8 @@ class DynamoDBDataLayer(BaseDataLayer):
         storage_provider: Optional[BaseStorageClient] = None,
         user_thread_limit: int = 10,
     ):
+        print("==========print========")
+        _logger.info("========log=================")
         if client:
             self.client = client
         else:
