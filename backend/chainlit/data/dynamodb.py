@@ -488,7 +488,7 @@ class DynamoDBDataLayer(BaseDataLayer):
 
     async def get_thread(self, thread_id: str) -> "Optional[ThreadDict]":
         _logger.info("DynamoDB: get_thread thread=%s", thread_id)
-        print("get_thread")
+        print("=======get_thread")
         # Get all thread records
         thread_items: List[Any] = []
 
@@ -543,7 +543,7 @@ class DynamoDBDataLayer(BaseDataLayer):
                 "elements": elements,
             }
         )
-
+        print(f"thread_dict: \n {thread_dict}")
         return thread_dict
 
     async def update_thread(
