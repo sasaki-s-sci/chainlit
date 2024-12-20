@@ -523,7 +523,9 @@ class DynamoDBDataLayer(BaseDataLayer):
                 thread_dict = item
 
             elif item["SK"].startswith("ELEMENT"):
+                print(f"before: {item["url"]}")
                 item["url"]=self.get_signed_url(item)
+                print(f"after: {item["url"]}")
                 elements.append(item)
 
             elif item["SK"].startswith("STEP"):
@@ -547,17 +549,17 @@ class DynamoDBDataLayer(BaseDataLayer):
         )
         print(f"thread_dict: \n {thread_dict}")
         return thread_dict
-    def get_signed_url(self, item: Dict[str,Any]) -> Dict[str, Any]:
+    def get_signed_url(self, item: Dict[str,Any]) -> str:
         if item.get("objectKey"):
             url =self.storage_provider.generate_presigned_url(
-                "get_object",
+                ClientMethod="get_object",
                 Params={
-                    "Bucket": "your-bucket-name",
+                    "Bucket": self.table_name,
                     "Key": item["objectKey"],
                 },
                 ExpiresIn=3600,  # URLの有効期限[s]
             )
-        return item
+        return url
 
     async def update_thread(
         self,
